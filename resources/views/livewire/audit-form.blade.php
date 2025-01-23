@@ -10,6 +10,7 @@
         <div class="mb-5">
             <label for="port" class="block mb-2 text-sm font-medium text-gray-900 ">Your Router's Port</label>
             <input type="number" wire:model.live="port" id="port" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="8291" />
+            @error('port') <span class="error text-red-900">{{ $message }}</span> @enderror
         </div>
         <div class="mb-5">
             <label for="username" class="block mb-2 text-sm font-medium text-gray-900 ">Username</label>
@@ -73,4 +74,13 @@
         <button wire:click="submitForm" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Go!</button>
     </form>
 
+    @if($this->auditRunning)
+        Audit is running...
+
+        @if($this->auditResult != [])
+            @php
+                var_dump($this->auditResult);
+            @endphp
+        @endif
+    @endif
 </div>

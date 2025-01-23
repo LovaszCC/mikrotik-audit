@@ -22,7 +22,7 @@ final readonly class VersionController
     {
 
         if((float)$this->version >= 7.1) {
-            return new ROSV7($this->ip, $this->username, $this->password);
+            return new ROSV7($this->ip, $this->username, $this->password, $this->port);
         }
         elseif((float)$this->version >= 6.0) {
             return new ROSV6($this->ip, $this->username, $this->password, $this->port);

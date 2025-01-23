@@ -16,6 +16,7 @@ class ROSV7 implements VersionInterface
         private readonly string $ip,
         private readonly string $username,
         private readonly string $password,
+        private readonly int $port,
     )
     {
     }
@@ -37,7 +38,7 @@ class ROSV7 implements VersionInterface
         }
 
         $response = Http::withBasicAuth($this->username, $this->password)
-            ->get('http://' . $this->ip . '/rest' . $path);
+            ->get('http://' . $this->ip . ':'.$this->port.'/rest' . $path);
 
         $jsonToArray = json_decode(mb_convert_encoding($response->body(), 'UTF-8', 'UTF-8'), true);
         if(json_last_error() !== JSON_ERROR_NONE) {
