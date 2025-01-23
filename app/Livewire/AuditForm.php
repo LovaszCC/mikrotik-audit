@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Http\Actions\RouterOSAuditSystem\RunFirewallAudit;
+use App\Http\Actions\RouterOSAuditSystem\RunNatAudit;
 use Illuminate\Http\Client\ConnectionException;
 use Livewire\Component;
 use RouterOS\Exceptions\BadCredentialsException;
@@ -21,7 +22,7 @@ final class AuditForm extends Component
 
     public string $password;
 
-    public int $port = 8728;
+    public int $port = 80;
 
     public string $version = '';
 
@@ -29,7 +30,8 @@ final class AuditForm extends Component
 
     public array $selected = [];
 
-    public bool $auditRunning = false;
+    public bool $firewallAuditRunning = false;
+    public bool $natAuditRunning = false;
 
     public array $auditResult = [];
 
@@ -61,12 +63,16 @@ final class AuditForm extends Component
             'selected.required' => 'Please select at least one option',
             'selected.min' => 'Please select at least one option',
         ]);
-        $this->auditRunning = true;
+
         $hits = [];
 
         foreach ($this->selected as $option) {
             if ($option === 'firewall') {
-                $hits[] = new RunFirewallAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
+                $this->firewallAuditRunning = true;
+                $hits["firewall"][] = new RunFirewallAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
+            } elseif ($option === 'nat') {
+                $this->natAuditRunning = true;
+                $hits["nat"][] = new RunNatAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
             }
         }
         $this->auditResult = $hits;
