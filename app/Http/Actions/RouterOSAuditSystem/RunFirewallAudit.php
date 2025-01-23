@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Actions\RouterOSAuditSystem;
 
 use App\Http\Services\RouterOSAuditSystem\VersionController;
@@ -18,10 +20,8 @@ final readonly class RunFirewallAudit
         private string $username,
         private string $password,
         private string $version,
-        private int    $port = 8728,
-    )
-    {
-    }
+        private int $port = 8728,
+    ) {}
 
     /**
      * @throws ClientException
@@ -40,116 +40,112 @@ final readonly class RunFirewallAudit
             }
 
             $rules = $version->connect()->get('/ip/firewall/filter/print');
-            if($rules === []) {
+            if ($rules === []) {
                 return ['error' => 'true', 'message' => 'No rules found'];
             }
-            if(array_key_exists('error', $rules)) {
+            if (array_key_exists('error', $rules)) {
                 return ['error' => 'true', 'message' => $rules['message']];
             }
-
 
             $hits = [];
             $implicit_denies_input = 0;
             $implicit_denies_forward = 0;
 
             foreach ($rules as $rule) {
-                if (array_key_exists("chain", $rule) && $rule["chain"] == 'input' &&
-                    array_key_exists("action", $rule) && $rule['action'] == 'accept') {
+                if (array_key_exists('chain', $rule) && $rule['chain'] === 'input' &&
+                    array_key_exists('action', $rule) && $rule['action'] === 'accept') {
 
-                    //Totaly open firewall
-                    if(!array_key_exists('src-address', $rule) &&
-                        !array_key_exists('src-address-list', $rule) &&
-                        !array_key_exists('in-interface', $rule) &&
-                        !array_key_exists('in-interface-list', $rule)){
-                        if(in_array($rule, $hits)) {
+                    // Totaly open firewall
+                    if (! array_key_exists('src-address', $rule) &&
+                        ! array_key_exists('src-address-list', $rule) &&
+                        ! array_key_exists('in-interface', $rule) &&
+                        ! array_key_exists('in-interface-list', $rule)) {
+                        if (in_array($rule, $hits)) {
                             continue;
                         }
                         $hits[] = $rule;
                     }
 
-                    //If protocol is tcp or udp and src-address or src-address-list is not set or src-address is 0.0.0.0/0 then add to hits
-                    if(array_key_exists('protocol', $rule)
-                        && ($rule['protocol'] == 'tcp' || $rule['protocol'] == 'udp')
+                    // If protocol is tcp or udp and src-address or src-address-list is not set or src-address is 0.0.0.0/0 then add to hits
+                    if (array_key_exists('protocol', $rule)
+                        && ($rule['protocol'] === 'tcp' || $rule['protocol'] === 'udp')
                         && (
-                            !array_key_exists('src-address', $rule) ||
-                            !array_key_exists('src-address-list', $rule) ||
-                            $rule['src-address'] == '0.0.0.0/0'
+                            ! array_key_exists('src-address', $rule) ||
+                            ! array_key_exists('src-address-list', $rule) ||
+                            $rule['src-address'] === '0.0.0.0/0'
                         ) &&
-                        !array_key_exists('in-interface', $rule) &&
-                        !array_key_exists('in-interface-list', $rule)
+                        ! array_key_exists('in-interface', $rule) &&
+                        ! array_key_exists('in-interface-list', $rule)
                     ) {
-                        if(in_array($rule, $hits)) {
+                        if (in_array($rule, $hits)) {
                             continue;
                         }
                         $hits[] = $rule;
                     }
 
-
-
-                    if(array_key_exists("src-address", $rule) && $rule['src-address'] == '0.0.0.0/0') {
-                        if(in_array($rule, $hits)) {
+                    if (array_key_exists('src-address', $rule) && $rule['src-address'] === '0.0.0.0/0') {
+                        if (in_array($rule, $hits)) {
                             continue;
                         }
                         $hits[] = $rule;
                     }
 
-
-                    //If we don't have src-address or src-address-list and we don't have protocol and connection state is not established or related add to hits
-                    if(!array_key_exists('src-address', $rule) &&
-                        !array_key_exists('src-address-list', $rule) &&
-                        !array_key_exists('protocol', $rule) &&
+                    // If we don't have src-address or src-address-list and we don't have protocol and connection state is not established or related add to hits
+                    if (! array_key_exists('src-address', $rule) &&
+                        ! array_key_exists('src-address-list', $rule) &&
+                        ! array_key_exists('protocol', $rule) &&
                         array_key_exists('connection-state', $rule) &&
-                        !str_contains('established', $rule['connection-state']) &&
-                        !str_contains('related', $rule['connection-state'])) {
-                        if(in_array($rule, $hits)) {
+                        ! str_contains('established', (string) $rule['connection-state']) &&
+                        ! str_contains('related', (string) $rule['connection-state'])) {
+                        if (in_array($rule, $hits)) {
                             continue;
                         }
                         $hits[] = $rule;
                     }
-
 
                 }
 
-                if(
-                    (array_key_exists('chain', $rule) && $rule['chain']=='input') &&
-                    (array_key_exists('action', $rule) && $rule['action'] == 'drop' || $rule['action'] == 'reject') &&
-                    (!array_key_exists('src-address', $rule)) &&
-                    (!array_key_exists('src-address-list', $rule)) &&
-                    (!array_key_exists('in-interface', $rule)) &&
-                    (!array_key_exists('in-interface-list', $rule)) &&
-                    (!array_key_exists('protocol', $rule)) &&
-                    (!array_key_exists('connection-state', $rule)) &&
-                    (!array_key_exists('out-interface', $rule)) &&
-                    (!array_key_exists('out-interface-list', $rule)) &&
-                    (array_key_exists('disabled', $rule) && $rule['disabled'] == 'false')
+                if (
+                    (array_key_exists('chain', $rule) && $rule['chain'] === 'input') &&
+                    (array_key_exists('action', $rule) && $rule['action'] === 'drop' || $rule['action'] === 'reject') &&
+                    (! array_key_exists('src-address', $rule)) &&
+                    (! array_key_exists('src-address-list', $rule)) &&
+                    (! array_key_exists('in-interface', $rule)) &&
+                    (! array_key_exists('in-interface-list', $rule)) &&
+                    (! array_key_exists('protocol', $rule)) &&
+                    (! array_key_exists('connection-state', $rule)) &&
+                    (! array_key_exists('out-interface', $rule)) &&
+                    (! array_key_exists('out-interface-list', $rule)) &&
+                    (array_key_exists('disabled', $rule) && $rule['disabled'] === 'false')
 
                 ) {
                     $implicit_denies_input++;
                 }
-                if(
-                    (array_key_exists('chain', $rule) && $rule['chain']=='forward') &&
-                    (array_key_exists('action', $rule) && $rule['action'] == 'drop' || $rule['action'] == 'reject') &&
-                    (!array_key_exists('src-address', $rule)) &&
-                    (!array_key_exists('src-address-list', $rule)) &&
-                    (!array_key_exists('in-interface', $rule)) &&
-                    (!array_key_exists('in-interface-list', $rule)) &&
-                    (!array_key_exists('protocol', $rule)) &&
-                    (!array_key_exists('connection-state', $rule)) &&
-                    (!array_key_exists('out-interface', $rule)) &&
-                    (!array_key_exists('out-interface-list', $rule)) &&
-                    (array_key_exists('disabled', $rule) && $rule['disabled'] == 'false')
+                if (
+                    (array_key_exists('chain', $rule) && $rule['chain'] === 'forward') &&
+                    (array_key_exists('action', $rule) && $rule['action'] === 'drop' || $rule['action'] === 'reject') &&
+                    (! array_key_exists('src-address', $rule)) &&
+                    (! array_key_exists('src-address-list', $rule)) &&
+                    (! array_key_exists('in-interface', $rule)) &&
+                    (! array_key_exists('in-interface-list', $rule)) &&
+                    (! array_key_exists('protocol', $rule)) &&
+                    (! array_key_exists('connection-state', $rule)) &&
+                    (! array_key_exists('out-interface', $rule)) &&
+                    (! array_key_exists('out-interface-list', $rule)) &&
+                    (array_key_exists('disabled', $rule) && $rule['disabled'] === 'false')
 
                 ) {
                     $implicit_denies_forward++;
                 }
             }
-            if($implicit_denies_input == 0 || $implicit_denies_forward == 0) {
+            if ($implicit_denies_input === 0 || $implicit_denies_forward === 0) {
                 $hits[] = [
                     'message' => 'Implicit denies not found',
                     'implicit_denies_input' => $implicit_denies_input,
-                    'implicit_denies_forward' => $implicit_denies_forward
+                    'implicit_denies_forward' => $implicit_denies_forward,
                 ];
             }
+
             return $hits;
         } catch (ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
             return ['error' => 'true', 'message' => $e->getMessage()];

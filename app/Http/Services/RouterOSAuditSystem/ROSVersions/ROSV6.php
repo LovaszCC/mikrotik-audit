@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Services\RouterOSAuditSystem\ROSVersions;
 
 use App\Http\Contracts\RouterOSAuditSystem\VersionInterface;
-use App\Http\Traits\SocketTrait;
 use RouterOS\Client;
 use RouterOS\Exceptions\BadCredentialsException;
 use RouterOS\Exceptions\ClientException;
@@ -12,20 +13,16 @@ use RouterOS\Exceptions\ConnectException;
 use RouterOS\Exceptions\QueryException;
 use RouterOS\Query;
 
-class ROSV6 implements VersionInterface
+final class ROSV6 implements VersionInterface
 {
-
     private Client $client;
-
 
     public function __construct(
         private readonly string $ip,
         private readonly string $username,
         private readonly string $password,
         private readonly int $port,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws ClientException
@@ -51,10 +48,10 @@ class ROSV6 implements VersionInterface
      * @throws ClientException
      * @throws ConfigException
      */
-    public function get(string $path = ""): array
+    public function get(string $path = ''): array
     {
         $query = new Query($path);
+
         return $this->client->query($query)->read();
     }
-
 }
