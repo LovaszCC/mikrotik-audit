@@ -5,7 +5,6 @@ namespace App\Http\Actions\RouterOSAuditSystem;
 use App\Http\Services\RouterOSAuditSystem\VersionController;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\JsonResponse;
 use RouterOS\Exceptions\BadCredentialsException;
 use RouterOS\Exceptions\ClientException;
 use RouterOS\Exceptions\ConfigException;
@@ -32,20 +31,20 @@ final readonly class RunFirewallAudit
      * @throws ConnectionException
      * @throws ConfigException|Exception
      */
-    public function audit(): JsonResponse|array
+    public function audit(): array
     {
         try {
             $version = new VersionController($this->version, $this->ip, $this->username, $this->password, $this->port)->getVersion();
             if ($version === []) {
-                return response()->json(['message' => 'Version not supported'], 400);
+                return ['error' => 'true', 'message' => 'Version not supported'];
             }
 
             $rules = $version->connect()->get('/ip/firewall/filter/print');
             if($rules === []) {
-                return response()->json(['message' => 'No rules found'], 400);
+                return ['error' => 'true', 'message' => 'No rules found'];
             }
             if(array_key_exists('error', $rules)) {
-                return response()->json(['message' => $rules['message']], 400);
+                return ['error' => 'true', 'message' => $rules['message']];
             }
 
 
@@ -153,7 +152,7 @@ final readonly class RunFirewallAudit
             }
             return $hits;
         } catch (ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
+            return ['error' => 'true', 'message' => $e->getMessage()];
         }
     }
 }
