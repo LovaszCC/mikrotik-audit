@@ -15,6 +15,6 @@
         @vite('resources/css/app.css')
     </head>
     <body class="font-sans antialiased">
-
+        <livewire:audit-form />
     </body>
 </html>
