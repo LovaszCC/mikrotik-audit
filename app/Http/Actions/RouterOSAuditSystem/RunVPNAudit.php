@@ -40,12 +40,10 @@ final readonly class RunVPNAudit
                 return ['error' => 'true', 'message' => 'Error during fetching VPN server data'];
             }
 
-            if ($l2tp['enabled'] === 'true') {
-                if ($l2tp['use-ipsec'] === 'no') {
-                    return [
-                        ['reason' => 'L2TP without IPsec is not secure, use L2TP/IPsec or SSTP instead'],
-                    ];
-                }
+            if ($l2tp['enabled'] === 'true' && $l2tp['use-ipsec'] === 'no') {
+                return [
+                    ['reason' => 'L2TP without IPsec is not secure, use L2TP/IPsec or SSTP instead'],
+                ];
             }
 
             if ($sstp['enabled'] === 'true') {
