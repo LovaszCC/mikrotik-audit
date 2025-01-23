@@ -71,11 +71,6 @@
                 <label for="nat" class="ml-2 text-sm font-medium text-gray-900">NAT</label>
             </div>
             <div class="flex items-start mb-2">
-                <input id="services" type="checkbox" wire:model="selected" value="services"
-                       class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300">
-                <label for="services" class="ml-2 text-sm font-medium text-gray-900">Services</label>
-            </div>
-            <div class="flex items-start mb-2">
                 <input id="vpn" type="checkbox" wire:model="selected" value="vpn"
                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300">
                 <label for="vpn" class="ml-2 text-sm font-medium text-gray-900">VPN</label>
@@ -128,7 +123,6 @@
     @endif
 
     @if($this->natAuditRunning)
-        @ray($this->auditResult)
         <div x-data="{open: false}"
              class="max-w-sm mx-auto p-4 flex items-center flex-wrap justify-between gap-3 mb-5 border border-gray-300 rounded bg-gray-50 rounded-md">
             <div class="cursor-pointer" x-on:click="open = !open">Nat Audit</div>
@@ -148,6 +142,34 @@
                             @foreach($results as $result)
                                 <div class="text-sm font-medium text-red-900">{{$result['reason']}} at
                                     id {{$result["rule"]}}</div>
+                            @endforeach
+                        @endif
+                    @endif
+                @endforeach
+
+            </div>
+        </div>
+    @endif
+    @if($this->vpnAuditRunning)
+        @ray($this->auditResult)
+        <div x-data="{open: false}"
+             class="max-w-sm mx-auto p-4 flex items-center flex-wrap justify-between gap-3 mb-5 border border-gray-300 rounded bg-gray-50 rounded-md">
+            <div class="cursor-pointer" x-on:click="open = !open">VPN Audit</div>
+            <div
+                class="icon w-8 h-8 rounded-full {{$this->auditResult["vpn"][0] == [] ? 'bg-green-700':'bg-red-700'}} flex items-center justify-center text-white">
+                <i wire:loading.class.remove="fa-solid" wire:loading.class="fa-spin"
+                   class="fa-solid  {{$this->auditResult["vpn"][0] == [] ? 'fa-check':'fa-close'}}"></i>
+            </div>
+            <div class="basis-full" x-show="open">
+
+                @foreach($this->auditResult["vpn"] as $results)
+
+                    @if($results != [])
+                        @if(array_key_exists('error', $results))
+                            <div class="text-sm font-medium text-red-900">{{$results['message']}}</div>
+                        @else
+                            @foreach($results as $result)
+                                <div class="text-sm font-medium text-red-900">{{$result['reason']}}</div>
                             @endforeach
                         @endif
                     @endif

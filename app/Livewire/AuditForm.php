@@ -6,7 +6,9 @@ namespace App\Livewire;
 
 use App\Http\Actions\RouterOSAuditSystem\RunFirewallAudit;
 use App\Http\Actions\RouterOSAuditSystem\RunNatAudit;
+use App\Http\Actions\RouterOSAuditSystem\RunVPNAudit;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\View\View;
 use Livewire\Component;
 use RouterOS\Exceptions\BadCredentialsException;
 use RouterOS\Exceptions\ClientException;
@@ -31,7 +33,10 @@ final class AuditForm extends Component
     public array $selected = [];
 
     public bool $firewallAuditRunning = false;
+
     public bool $natAuditRunning = false;
+
+    public bool $vpnAuditRunning = false;
 
     public array $auditResult = [];
 
@@ -69,17 +74,20 @@ final class AuditForm extends Component
         foreach ($this->selected as $option) {
             if ($option === 'firewall') {
                 $this->firewallAuditRunning = true;
-                $hits["firewall"][] = new RunFirewallAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
+                $hits['firewall'][] = new RunFirewallAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
             } elseif ($option === 'nat') {
                 $this->natAuditRunning = true;
-                $hits["nat"][] = new RunNatAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
+                $hits['nat'][] = new RunNatAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
+            } elseif ($option === 'vpn') {
+                $this->vpnAuditRunning = true;
+                $hits['vpn'][] = new RunVPNAudit($this->ip, $this->username, $this->password, $this->version, $this->port)->audit();
             }
         }
         $this->auditResult = $hits;
 
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.audit-form');
     }

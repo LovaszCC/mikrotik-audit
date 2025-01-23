@@ -21,19 +21,9 @@ final readonly class RunFirewallAudit
         private string $username,
         private string $password,
         private string $version,
-        private int    $port = 8728,
-    )
-    {
-    }
+        private int $port = 8728,
+    ) {}
 
-    /**
-     * @throws ClientException
-     * @throws ConnectException
-     * @throws QueryException
-     * @throws BadCredentialsException
-     * @throws ConnectionException
-     * @throws ConfigException|Exception
-     */
     public function audit(): array
     {
         try {
@@ -51,7 +41,7 @@ final readonly class RunFirewallAudit
             }
 
             return new FirewallChecks()->boot($rules);
-        } catch (ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
+        } catch (Exception|ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
             return ['error' => 'true', 'message' => $e->getMessage()];
         }
     }

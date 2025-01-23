@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Actions\RouterOSAuditSystem;
 
 use App\Http\Cheks\NatChecks;
@@ -19,10 +21,8 @@ final readonly class RunNatAudit
         private string $username,
         private string $password,
         private string $version,
-        private int    $port = 8728,
-    )
-    {
-    }
+        private int $port = 8728,
+    ) {}
 
     public function audit(): array
     {
@@ -39,6 +39,7 @@ final readonly class RunNatAudit
             if (array_key_exists('error', $rules)) {
                 return ['error' => 'true', 'message' => $rules['message']];
             }
+
             return new NatChecks()->boot($rules);
         } catch (Exception|ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
             return ['error' => 'true', 'message' => $e->getMessage()];

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Cheks;
 
-final  class NatChecks
+final class NatChecks
 {
     private array $result = [];
+
     private array $rules = [];
 
     public function boot(array $rules): array
@@ -21,9 +24,10 @@ final  class NatChecks
         foreach ($this->rules as $rule) {
             if (array_key_exists('chain', $rule) && $rule['chain'] === 'dstnat') {
                 $this->result[] = [
-                    'rule' => $rule[".id"],
-                    'reason' => 'Dstnat rule found'
+                    'rule' => $rule['.id'],
+                    'reason' => 'Dstnat rule found',
                 ];
+
                 return;
             }
         }
