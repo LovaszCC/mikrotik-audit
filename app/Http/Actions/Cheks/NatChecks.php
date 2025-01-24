@@ -22,7 +22,7 @@ final class NatChecks
     public function hasDstNat(): void
     {
         foreach ($this->rules as $rule) {
-            if (array_key_exists('chain', $rule) && $rule['chain'] === 'dstnat') {
+            if ((array_key_exists('chain', $rule) && $rule['chain'] === 'dstnat')) {
                 $this->result[] = [
                     'rule' => $rule['.id'],
                     'reason' => 'Dstnat rule found',
