@@ -29,5 +29,4 @@ system is built with the following features:
 3. Run `composer install`
 4. Run `npm install`
 5. Run `npm run dev`
-6. Run `php artisan key:generate`
 
