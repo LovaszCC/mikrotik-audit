@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\RouterOS;
 
-use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunFirewallAudit;
-use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunNatAudit;
-use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunVPNAudit;
+use App\Domain\RouterOS\Actions\RunFirewallAudit;
+use App\Domain\RouterOS\Actions\RunNatAudit;
+use App\Domain\RouterOS\Actions\RunVPNAudit;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\View\View;
 use Livewire\Component;

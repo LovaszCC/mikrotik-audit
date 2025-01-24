@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\RouterOS\Actions\RouterOSAuditSystem;
+namespace App\Domain\RouterOS\Actions;
 
 use Carbon\Carbon;
 use Exception;
