@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Actions\Cheks;
+namespace App\Http\Actions\RouterOSAuditSystem\Cheks;
 
 final class NatChecks
 {

@@ -21,8 +21,10 @@ final readonly class RunVPNAudit
         private string $username,
         private string $password,
         private string $version,
-        private int $port = 8728,
-    ) {}
+        private int    $port = 8728,
+    )
+    {
+    }
 
     public function audit(): array
     {
@@ -85,7 +87,6 @@ final readonly class RunVPNAudit
                 }
 
                 return [];
-                // Check cert validity
             }
 
             return [];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Actions\RouterOSAuditSystem;
 
-use App\Http\Actions\Cheks\FirewallChecks;
+use App\Http\Actions\RouterOSAuditSystem\Cheks\FirewallChecks;
 use App\Http\Services\RouterOSAuditSystem\VersionController;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
@@ -21,8 +21,10 @@ final readonly class RunFirewallAudit
         private string $username,
         private string $password,
         private string $version,
-        private int $port = 8728,
-    ) {}
+        private int    $port = 8728,
+    )
+    {
+    }
 
     public function audit(): array
     {
