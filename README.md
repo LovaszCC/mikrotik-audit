@@ -1,4 +1,4 @@
-## Mikrotik Audit System Demo (I just wanted to test out the REST API 😃) - Laravel 11
+## Mikrotik Audit System Demo (I just wanted to test out the REST API 😃)
 
 This is a simple system that allows you to audit your Mikrotik devices. It is built using Laravel 11 and a bit of
 livewire. The system gives you access to check the configuration on your mikrotik device, without storeing any data! The
