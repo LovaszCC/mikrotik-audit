@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Actions\RouterOSAuditSystem;
+namespace App\Domain\RouterOS\Actions\RouterOSAuditSystem;
 
-use App\Http\Actions\RouterOSAuditSystem\Cheks\FirewallChecks;
-use App\Http\Services\RouterOSAuditSystem\VersionController;
+use App\Domain\RouterOS\Cheks\NatChecks;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use RouterOS\Exceptions\BadCredentialsException;
@@ -14,7 +13,7 @@ use RouterOS\Exceptions\ConfigException;
 use RouterOS\Exceptions\ConnectException;
 use RouterOS\Exceptions\QueryException;
 
-final readonly class RunFirewallAudit
+final readonly class RunNatAudit
 {
     public function __construct(
         private string $ip,
@@ -29,20 +28,20 @@ final readonly class RunFirewallAudit
     public function audit(): array
     {
         try {
-            $version = new VersionController($this->version, $this->ip, $this->username, $this->password, $this->port)->getVersion();
+            $version = new \App\Domain\RouterOS\Services\VersionController($this->version, $this->ip, $this->username, $this->password, $this->port)->getVersion();
             if ($version === []) {
                 return ['error' => 'true', 'message' => 'Version not supported'];
             }
 
-            $rules = $version->connect()->get('/ip/firewall/filter/print');
+            $rules = $version->connect()->get('/ip/firewall/nat/print');
             if ($rules === []) {
-                return ['error' => 'true', 'message' => 'No rules found'];
+                return [];
             }
             if (array_key_exists('error', $rules)) {
                 return ['error' => 'true', 'message' => $rules['message']];
             }
 
-            return new FirewallChecks()->boot($rules);
+            return new NatChecks()->boot($rules);
         } catch (Exception|ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
             return ['error' => 'true', 'message' => $e->getMessage()];
         }

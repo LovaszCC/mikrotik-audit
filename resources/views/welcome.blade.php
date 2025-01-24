@@ -21,10 +21,10 @@
             integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    
+
     @vite('resources/css/app.css')
 </head>
 <body class="font-sans antialiased">
-<livewire:audit-form/>
+<livewire:router-o-s.audit-form/>
 </body>
 </html>

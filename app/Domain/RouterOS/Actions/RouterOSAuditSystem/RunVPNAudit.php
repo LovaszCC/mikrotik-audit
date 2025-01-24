@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Actions\RouterOSAuditSystem;
+namespace App\Domain\RouterOS\Actions\RouterOSAuditSystem;
 
-use App\Http\Services\RouterOSAuditSystem\VersionController;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
@@ -29,7 +28,7 @@ final readonly class RunVPNAudit
     public function audit(): array
     {
         try {
-            $version = new VersionController($this->version, $this->ip, $this->username, $this->password, $this->port)->getVersion();
+            $version = new \App\Domain\RouterOS\Services\VersionController($this->version, $this->ip, $this->username, $this->password, $this->port)->getVersion();
             if ($version === []) {
                 return ['error' => 'true', 'message' => 'Version not supported'];
             }

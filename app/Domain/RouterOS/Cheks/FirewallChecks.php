@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Actions\RouterOSAuditSystem\Cheks;
+namespace App\Domain\RouterOS\Cheks;
 
 final class FirewallChecks
 {

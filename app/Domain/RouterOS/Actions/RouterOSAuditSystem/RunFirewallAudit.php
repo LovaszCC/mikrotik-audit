@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Actions\RouterOSAuditSystem;
+namespace App\Domain\RouterOS\Actions\RouterOSAuditSystem;
 
-use App\Http\Actions\RouterOSAuditSystem\Cheks\NatChecks;
-use App\Http\Services\RouterOSAuditSystem\VersionController;
+use App\Domain\RouterOS\Cheks\FirewallChecks;
+use App\Domain\RouterOS\Services\VersionController;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use RouterOS\Exceptions\BadCredentialsException;
@@ -14,7 +14,7 @@ use RouterOS\Exceptions\ConfigException;
 use RouterOS\Exceptions\ConnectException;
 use RouterOS\Exceptions\QueryException;
 
-final readonly class RunNatAudit
+final readonly class RunFirewallAudit
 {
     public function __construct(
         private string $ip,
@@ -34,15 +34,16 @@ final readonly class RunNatAudit
                 return ['error' => 'true', 'message' => 'Version not supported'];
             }
 
-            $rules = $version->connect()->get('/ip/firewall/nat/print');
+            $rules = $version->connect()->get('/ip/firewall/filter/print');
             if ($rules === []) {
-                return [];
+                return ['error' => 'true', 'message' => 'No rules found'];
             }
             if (array_key_exists('error', $rules)) {
                 return ['error' => 'true', 'message' => $rules['message']];
             }
 
-            return new NatChecks()->boot($rules);
+
+            return new FirewallChecks()->boot($rules);
         } catch (Exception|ClientException|ConnectException|QueryException|BadCredentialsException|ConfigException|ConnectionException $e) {
             return ['error' => 'true', 'message' => $e->getMessage()];
         }

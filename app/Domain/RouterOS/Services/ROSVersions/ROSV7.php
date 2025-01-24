@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Services\RouterOSAuditSystem\ROSVersions;
+namespace App\Domain\RouterOS\Services\ROSVersions;
 
-use App\Http\Interfaces\RouterOSAuditSystem\VersionInterface;
+use App\Domain\RouterOS\Interfaces\VersionInterface;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -15,8 +15,10 @@ final readonly class ROSV7 implements VersionInterface
         private string $ip,
         private string $username,
         private string $password,
-        private int $port,
-    ) {}
+        private int    $port,
+    )
+    {
+    }
 
     public function connect(): self
     {
@@ -35,11 +37,11 @@ final readonly class ROSV7 implements VersionInterface
         }
 
         $response = Http::withBasicAuth($this->username, $this->password)
-            ->get('http://'.$this->ip.':'.$this->port.'/rest'.$path);
+            ->get('http://' . $this->ip . ':' . $this->port . '/rest' . $path);
 
         $jsonToArray = json_decode(mb_convert_encoding($response->body(), 'UTF-8', 'UTF-8'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Failed to decode JSON: '.json_last_error_msg());
+            throw new Exception('Failed to decode JSON: ' . json_last_error_msg());
         }
 
         return $jsonToArray;

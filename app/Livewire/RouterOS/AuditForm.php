@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\RouterOS;
 
-use App\Http\Actions\RouterOSAuditSystem\RunFirewallAudit;
-use App\Http\Actions\RouterOSAuditSystem\RunNatAudit;
-use App\Http\Actions\RouterOSAuditSystem\RunVPNAudit;
+use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunFirewallAudit;
+use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunNatAudit;
+use App\Domain\RouterOS\Actions\RouterOSAuditSystem\RunVPNAudit;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -89,6 +89,6 @@ final class AuditForm extends Component
 
     public function render(): View
     {
-        return view('livewire.audit-form');
+        return view('RouterOS.Views.livewire.audit-form');
     }
 }

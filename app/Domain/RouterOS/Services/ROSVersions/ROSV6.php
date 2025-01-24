@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Services\RouterOSAuditSystem\ROSVersions;
+namespace App\Domain\RouterOS\Services\ROSVersions;
 
-use App\Http\Interfaces\RouterOSAuditSystem\VersionInterface;
+use App\Domain\RouterOS\Interfaces\VersionInterface;
 use RouterOS\Client;
 use RouterOS\Exceptions\BadCredentialsException;
 use RouterOS\Exceptions\ClientException;
@@ -21,8 +21,10 @@ final class ROSV6 implements VersionInterface
         private readonly string $ip,
         private readonly string $username,
         private readonly string $password,
-        private readonly int $port,
-    ) {}
+        private readonly int    $port,
+    )
+    {
+    }
 
     /**
      * @throws ClientException
