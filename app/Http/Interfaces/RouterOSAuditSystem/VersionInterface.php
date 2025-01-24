@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Contracts\RouterOSAuditSystem;
+namespace App\Http\Interfaces\RouterOSAuditSystem;
 
 interface VersionInterface
 {

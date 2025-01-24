@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Services\RouterOSAuditSystem\ROSVersions;
 
-use App\Http\Contracts\RouterOSAuditSystem\VersionInterface;
+use App\Http\Interfaces\RouterOSAuditSystem\VersionInterface;
 use RouterOS\Client;
 use RouterOS\Exceptions\BadCredentialsException;
 use RouterOS\Exceptions\ClientException;

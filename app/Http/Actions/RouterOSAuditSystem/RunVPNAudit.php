@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Actions\RouterOSAuditSystem;
 
 use App\Http\Services\RouterOSAuditSystem\VersionController;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use RouterOS\Exceptions\BadCredentialsException;
@@ -57,6 +58,32 @@ final readonly class RunVPNAudit
                 ];
             }
             if ($ovpn !== []) {
+                $certs = $version->connect()->get('/certificate/print');
+                if ($certs === []) {
+                    return ['error' => 'true', 'message' => 'No certificates found'];
+                }
+                if (array_key_exists('error', $certs)) {
+                    return ['error' => 'true', 'message' => 'Error during fetching VPN server data'];
+                }
+                $now = Carbon::now();
+                foreach ($certs as $cert) {
+                    if (array_key_exists('invalid-after', $cert)) {
+
+                        $invalidAfter = Carbon::parse($cert['invalid-after']);
+                        if ($now->greaterThan($invalidAfter)) {
+                            return [
+                                ['reason' => 'Certificate is expired'],
+                            ];
+                        }
+                        if ($invalidAfter->isSameMonth($now)) {
+                            return [
+                                ['reason' => 'Certificate is expiring soon'],
+                            ];
+                        }
+                    }
+
+                }
+
                 return [];
                 // Check cert validity
             }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Actions\RouterOSAuditSystem;
 
-use App\Http\Cheks\NatChecks;
+use App\Http\Actions\Cheks\NatChecks;
 use App\Http\Services\RouterOSAuditSystem\VersionController;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;

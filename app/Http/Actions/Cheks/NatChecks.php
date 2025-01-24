@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Cheks;
+namespace App\Http\Actions\Cheks;
 
 final class NatChecks
 {
