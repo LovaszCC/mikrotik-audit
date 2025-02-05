@@ -19,7 +19,7 @@ system is built with the following features:
 
 ### We are using the following packages:
 
-- evilfreelancer/routeros-api-php for communicating with the mikrotik device which are not capable of using the
+- evilfreelancer/routeros-api-php for communicating with the mikrotik devices which are not capable of using the
   REST API
 
 ### Installation
